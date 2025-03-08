@@ -11,7 +11,7 @@ import {
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -40,20 +40,7 @@ export default function About() {
               preferences of our students. Our dedicated staff works tirelessly to ensure that every meal is prepared 
               with care and served on time.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link 
-                to="/meal_schedule" 
-                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-md transition flex items-center"
-              >
-                <FaCalendarAlt className="mr-2" /> Meal Schedule
-              </Link>
-              <Link 
-                to="/feedback" 
-                className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-md transition flex items-center"
-              >
-                <FaComment className="mr-2" /> Give Feedback
-              </Link>
-            </div>
+            
           </div>
 
           {/* Features Section */}

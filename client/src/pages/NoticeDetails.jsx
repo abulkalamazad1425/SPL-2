@@ -44,17 +44,8 @@ export default function NoticeDetails() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 mt-16">
-        <Loader2 className="animate-spin h-14 w-14 text-blue-500 mb-4" />
-        <p className="text-blue-600 text-lg font-medium animate-pulse">Loading notice details...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-4xl mx-auto">
         {/* Error Message */}
         {error && (
@@ -71,7 +62,13 @@ export default function NoticeDetails() {
           </div>
         )}
 
-        {notice ? (
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex flex-col justify-center items-center p-20 bg-white rounded-3xl shadow-lg border border-blue-100">
+            <Loader2 className="animate-spin h-14 w-14 text-blue-500 mb-4" />
+            <p className="text-blue-600 text-lg font-medium animate-pulse">Loading notice details...</p>
+          </div>
+        ) : notice ? (
           <div className="space-y-6">
             {/* Header Section */}
             <div className="bg-white rounded-3xl p-8 text-center shadow-lg border border-blue-100">
@@ -101,7 +98,7 @@ export default function NoticeDetails() {
               <div className="bg-white rounded-3xl p-6 shadow-lg border border-blue-100">
                 <div className="border border-blue-100 rounded-xl p-5 flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50">
                   <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-xl bg-red-100 shadow-sm">
+                    <div className="p-3 rounded-xl bg-red-100">
                       <FileText className="w-6 h-6 text-red-500" />
                     </div>
                     <div>

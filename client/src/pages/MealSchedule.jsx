@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MealSchedule() {
   // State to hold form data
-  const navigate=useNavigate(); 
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     startDate: '',
     finishDate: '',
@@ -24,123 +24,136 @@ export default function MealSchedule() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res=await fetch('/api/manager/update_mealschedule',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
+    const res = await fetch('/api/manager/update_mealschedule', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      body:JSON.stringify(formData),
-    })
-    const data=res.json();
-    if(data.success===false){
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
+    if (data.success === false) {
       console.log(data.message);
     }
     navigate('/');
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <div className="w-full max-w-md p-8 space-y-6">
-        <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
-          {/* Header Section */}
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-800">Meal Form</h1>
-            <p className="text-gray-500">Plan your meals efficiently</p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
+      <div className="max-w-2xl mx-auto">
+        {/* Header Section */}
+        <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
+          <h1 className="text-4xl font-bold mb-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+              Meal Schedule
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-lg mx-auto">
+            Set up meal schedules and rates for hostel residents
+          </p>
+        </div>
 
-          {/* Form Section */}
-          <form id="mealForm" onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-4">
-              {/* Start Date */}
+        {/* Form Section */}
+        <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
+          <form id="mealForm" onSubmit={handleSubmit} className="space-y-6">
+            {/* Start Date */}
+            <div className="space-y-2">
+              <label htmlFor="startDate" className="text-sm font-medium text-gray-700 block">
+                Start Date
+              </label>
               <div className="relative">
-                <label htmlFor="startDate" className="text-sm font-medium text-gray-700 block mb-2">
-                  Start Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <input
-                    type="date"
-                    id="startDate"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                    required
-                  />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Calendar className="h-5 w-5 text-blue-500" />
                 </div>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                  required
+                />
               </div>
+            </div>
 
-              {/* Finish Date */}
+            {/* Finish Date */}
+            <div className="space-y-2">
+              <label htmlFor="finishDate" className="text-sm font-medium text-gray-700 block">
+                Finish Date
+              </label>
               <div className="relative">
-                <label htmlFor="finishDate" className="text-sm font-medium text-gray-700 block mb-2">
-                  Finish Date
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <input
-                    type="date"
-                    id="finishDate"
-                    name="finishDate"
-                    value={formData.finishDate}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                    required
-                  />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <Calendar className="h-5 w-5 text-blue-500" />
                 </div>
+                <input
+                  type="date"
+                  id="finishDate"
+                  name="finishDate"
+                  value={formData.finishDate}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                  required
+                />
               </div>
+            </div>
 
-              {/* Meal Choice Type */}
+            {/* Meal Choice Type */}
+            <div className="space-y-2">
+              <label htmlFor="mealChoice" className="text-sm font-medium text-gray-700 block">
+                Meal Choice Type
+              </label>
               <div className="relative">
-                <label htmlFor="type" className="text-sm font-medium text-gray-700 block mb-2">
-                  Meal Choice Type
-                </label>
-                <div className="relative">
-                  <List className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <select
-                    id="mealChoice"
-                    name="mealChoice"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                    required
-                  >
-                    <option value="">--Select Meal Choice Type--</option>
-                    <option value="day">Day</option>
-                    <option value="period">Period</option>
-                  </select>
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <List className="h-5 w-5 text-purple-500" />
                 </div>
+                <select
+                  id="mealChoice"
+                  name="mealChoice"
+                  value={formData.mealChoice}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                  required
+                >
+                  <option value="">--Select Meal Choice Type--</option>
+                  <option value="Single Choice">Single Choice</option>
+                  <option value="Double Choice">Double Choice</option>
+                </select>
               </div>
+            </div>
 
-              {/* Meal Rate */}
+            {/* Meal Rate */}
+            <div className="space-y-2">
+              <label htmlFor="mealRate" className="text-sm font-medium text-gray-700 block">
+                Meal Rate
+              </label>
               <div className="relative">
-                <label htmlFor="mealRate" className="text-sm font-medium text-gray-700 block mb-2">
-                  Meal Rate
-                </label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <input
-                    type="number"
-                    id="mealRate"
-                    name="mealRate"
-                    step="0.01"
-                    min="0"
-                    value={formData.mealRate}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                    required
-                  />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                  Tk
                 </div>
+                <input
+                  type="number"
+                  id="mealRate"
+                  name="mealRate"
+                  min="0"
+                  value={formData.mealRate}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                  required
+                />
               </div>
             </div>
 
             {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
-            >
-              <span>Submit</span>
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
-            </button>
+            <div className="pt-4">
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 hover:shadow-md"
+              >
+                <span>Update Meal Schedule</span>
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </button>
+            </div>
           </form>
         </div>
       </div>

@@ -2,179 +2,203 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { 
-  FaUser, 
-  FaInfoCircle, 
-  FaHome, 
-  FaUtensils, 
-  FaMoneyBill, 
-  FaCreditCard, 
-  FaComment, 
-  FaChartPie, 
-  FaList, 
-  FaEnvelope, 
-  FaPhone, 
-  FaMapMarker,
-  FaBell,
-  FaClipboardList,
-  FaBook,
-  FaCalendarAlt,
-  FaFileInvoiceDollar,
-  FaUserFriends,
-  FaBookOpen,
-  FaClipboardCheck,
-  FaChalkboardTeacher
-} from 'react-icons/fa';
+  User, 
+  Utensils, 
+  DollarSign, 
+  CreditCard, 
+  MessageSquare, 
+  PieChart, 
+  List, 
+  Bell,
+  ClipboardList,
+  Calendar,
+  FileText,
+  Users,
+  BookOpen,
+  CheckSquare,
+  LogIn,
+  UserPlus
+} from 'lucide-react';
 
 export default function Home() {
   const { currentUser } = useSelector((state) => state.user);
-
-  // Footer component to maintain consistency
-  const SiteFooter = () => (
-    <footer className="bg-blue-800 text-white py-8">
-      <div className="container mx-auto grid md:grid-cols-3 gap-6 px-6">
-        <div>
-          <h3 className="font-bold mb-4">About Us</h3>
-          <p>Efficient hostel management system designed to simplify administrative tasks and enhance student experience.</p>
-        </div>
-        <div>
-          <h3 className="font-bold mb-4">Contact</h3>
-          <ul>
-            <li className="flex items-center mb-2">
-              <FaPhone className="mr-2" /> +91 9876543210
-            </li>
-            <li className="flex items-center mb-2">
-              <FaEnvelope className="mr-2" /> support@hostelsystem.com
-            </li>
-            <li className="flex items-center">
-              <FaMapMarker className="mr-2" /> Campus Address, City, State
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="font-bold mb-4">Quick Links</h3>
-          <ul>
-            <li><Link to="/about" className="hover:text-blue-200">About</Link></li>
-            <li><Link to="/privacy" className="hover:text-blue-200">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="hover:text-blue-200">Terms of Service</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="text-center mt-6 border-t border-blue-700 pt-4">
-        <p>&copy; 2024 Hostel Management System. All Rights Reserved.</p>
-      </div>
-    </footer>
-  );
-
-  // Before Login View
+  
   if (!currentUser) {
     return (
-      <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
-  
-
-        {/* Body */}
-        <main className="flex-grow container mx-auto px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl font-bold text-blue-900 mb-6">Welcome to Hostel Management</h2>
-            <p className="text-lg text-gray-700 mb-6">
-              Our comprehensive system streamlines hostel operations, providing seamless management for students, managers, and administrators. 
-              From meal tracking to expense management, we've got everything covered.
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Header Section */}
+          <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
+            <h1 className="text-4xl font-bold mb-3">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+                Shaidullah Hall Mess Management System
+              </span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Our comprehensive system streamlines hostel operations, providing seamless management for students, managers, and administrators.
             </p>
-            <div className="flex space-x-4">
+          </div>
+
+          {/* Main Content */}
+          <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
+            <h2 className="text-3xl font-bold mb-4 text-gray-800">Welcome to SHMMS</h2>
+            <p className="text-lg text-gray-600 mb-6">
+              From meal tracking to expense management, we've got everything covered for a seamless hostel experience.
+            </p>
+            <div className="flex flex-wrap gap-4">
               <Link 
                 to="/login" 
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition flex items-center"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:shadow-md transition flex items-center"
               >
-                <FaUser className="mr-2" /> Login
+                <LogIn className="mr-2 h-5 w-5" /> Login
               </Link>
               <Link 
                 to="/registration_verification" 
-                className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition flex items-center"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-md transition flex items-center"
               >
-                <FaUser className="mr-2" /> Register
+                <UserPlus className="mr-2 h-5 w-5" /> Register
               </Link>
             </div>
           </div>
-          <div className="hidden md:block">
-            <img 
-              src="/api/placeholder/600/400" 
-              alt="Hostel Management" 
-              className="rounded-lg shadow-xl"
-            />
-          </div>
-        </main>
-
-        
+        </div>
       </div>
     );
   }
 
   // After Login View
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-
-      {/* Body */}
-      <main className="flex-grow container mx-auto p-6 mt-20"> {/* Added mt-20 to account for fixed header */}
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Welcome, {currentUser.name || 'User'}
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
+          <h1 className="text-4xl font-bold mb-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+              Welcome, {currentUser.name || 'User'}
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Manage your hostel experience with our comprehensive dashboard
+          </p>
+        </div>
         
+        {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Common Functionality for All */}
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <FaBell className="text-blue-600 text-3xl mb-4" />
-            <h3 className="font-bold text-xl mb-2">View Notice</h3>
-            <p className="text-gray-600 mb-4">Check latest announcements and important notices.</p>
-            <Link to="/view_notice" className="text-blue-600 hover:underline">
-              View Notices
-            </Link>
+          <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-blue-100">
+            <div className="p-6">
+              <div className="flex items-start mb-4">
+                <div className="p-3 rounded-2xl bg-blue-100 mr-4">
+                  <Bell className="h-5 w-5 text-blue-500" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800 pt-2">View Notice</h2>
+              </div>
+              <div className="rounded-2xl bg-blue-50 p-5 mb-4">
+                <p className="text-gray-700">Check latest announcements and important notices.</p>
+              </div>
+              <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                <Link to="/view_notice" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                  View Notices <span className="ml-1">→</span>
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <FaChartPie className="text-blue-600 text-3xl mb-4" />
-            <h3 className="font-bold text-xl mb-2">Survey</h3>
-            <p className="text-gray-600 mb-4">Participate in or view system surveys.</p>
-            <Link to="/view_survey" className="text-blue-600 hover:underline">
-              View Surveys
-            </Link>
+          <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
+            <div className="p-6">
+              <div className="flex items-start mb-4">
+                <div className="p-3 rounded-2xl bg-purple-100 mr-4">
+                  <PieChart className="h-5 w-5 text-purple-500" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800 pt-2">Survey</h2>
+              </div>
+              <div className="rounded-2xl bg-purple-50 p-5 mb-4">
+                <p className="text-gray-700">Participate in or view system surveys.</p>
+              </div>
+              <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                <Link to="/view_survey" className="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                  View Surveys <span className="ml-1">→</span>
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-            <FaMoneyBill className="text-blue-600 text-3xl mb-4" />
-            <h3 className="font-bold text-xl mb-2">Expense</h3>
-            <p className="text-gray-600 mb-4">View and track hostel-related expenses.</p>
-            <Link to="/view_expense" className="text-blue-600 hover:underline">
-              View Expenses
-            </Link>
+          <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-pink-100">
+            <div className="p-6">
+              <div className="flex items-start mb-4">
+                <div className="p-3 rounded-2xl bg-pink-100 mr-4">
+                  <DollarSign className="h-5 w-5 text-pink-500" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800 pt-2">Expense</h2>
+              </div>
+              <div className="rounded-2xl bg-pink-50 p-5 mb-4">
+                <p className="text-gray-700">View and track hostel-related expenses.</p>
+              </div>
+              <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                <Link to="/view_expense" className="text-pink-600 hover:text-pink-800 font-medium flex items-center">
+                  View Expenses <span className="ml-1">→</span>
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* Student Specific Functionality */}
           {currentUser.usertype === 'student' && (
             <>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaUtensils className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Meal Management</h3>
-                <p className="text-gray-600 mb-4">Update and track your meal preferences.</p>
-                <Link to="/update_mealstatus" className="text-blue-600 hover:underline">
-                  Update Meal Status
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-indigo-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-indigo-100 mr-4">
+                      <Utensils className="h-5 w-5 text-indigo-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Meal Management</h2>
+                  </div>
+                  <div className="rounded-2xl bg-indigo-50 p-5 mb-4">
+                    <p className="text-gray-700">Update and track your meal preferences.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/update_mealstatus" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                      Update Meal Status <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaCreditCard className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Payments</h3>
-                <p className="text-gray-600 mb-4">Manage hostel-related payments.</p>
-                <Link to="/payment" className="text-blue-600 hover:underline">
-                  Payment Details
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <CreditCard className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Payments</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Manage hostel-related payments.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/payment" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Payment Details <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaComment className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Feedback</h3>
-                <p className="text-gray-600 mb-4">Share your thoughts about the hostel.</p>
-                <Link to="/give_feedback" className="text-blue-600 hover:underline">
-                  Give Feedback
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-blue-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-blue-100 mr-4">
+                      <MessageSquare className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Feedback</h2>
+                  </div>
+                  <div className="rounded-2xl bg-blue-50 p-5 mb-4">
+                    <p className="text-gray-700">Share your thoughts about the hostel.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/give_feedback" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                      Give Feedback <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -182,58 +206,193 @@ export default function Home() {
           {/* Manager Specific Functionality */}
           {currentUser.usertype === 'manager' && (
             <>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaCalendarAlt className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Meal Schedule</h3>
-                <p className="text-gray-600 mb-4">Manage and update meal timings.</p>
-                <Link to="/update_mealschedule" className="text-blue-600 hover:underline">
-                  Update Schedule
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-indigo-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-indigo-100 mr-4">
+                      <Calendar className="h-5 w-5 text-indigo-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Meal Schedule</h2>
+                  </div>
+                  <div className="rounded-2xl bg-indigo-50 p-5 mb-4">
+                    <p className="text-gray-700">Manage and update meal timings.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/update_mealschedule" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                      Update Schedule <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaList className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Student Management</h3>
-                <p className="text-gray-600 mb-4">View and manage student meal lists.</p>
-                <Link to="/view_meal_list" className="text-blue-600 hover:underline">
-                  Student Meal List
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <List className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Student Management</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">View and manage student meal lists.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/view_meal_list" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Student Meal List <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaFileInvoiceDollar className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Expense Management</h3>
-                <p className="text-gray-600 mb-4">Upload and track hostel expenses.</p>
-                <Link to="/upload_expense" className="text-blue-600 hover:underline">
-                  Upload Expense
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <User className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Resign View</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Manage resign applied students.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/resign_view" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Resign Student <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaClipboardList className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Create Survey</h3>
-                <p className="text-gray-600 mb-4">Design and launch new surveys.</p>
-                <Link to="/create_survey" className="text-blue-600 hover:underline">
-                  Create Survey
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <CreditCard className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Offline Registration</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Update student registration (offline).</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/unregistered_student" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Register Student <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <CreditCard className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Notice</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Notify Student Through Notice</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/upload_notice" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Post Notice <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaClipboardCheck className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Student Feedback</h3>
-                <p className="text-gray-600 mb-4">Review and analyze student feedback.</p>
-                <Link to="/student_feedback" className="text-blue-600 hover:underline">
-                  View Feedback
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <DollarSign className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Student Meal Payment</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Update student meal payment (offline).</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/meal_payment" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Update Payment <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
               
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaBookOpen className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Refund Management</h3>
-                <p className="text-gray-600 mb-4">Manage student refund requests.</p>
-                <Link to="/view_refund_list" className="text-blue-600 hover:underline">
-                  Refund List
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-pink-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-pink-100 mr-4">
+                      <FileText className="h-5 w-5 text-pink-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Expense Management</h2>
+                  </div>
+                  <div className="rounded-2xl bg-pink-50 p-5 mb-4">
+                    <p className="text-gray-700">Upload and track hostel expenses.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/upload_expense" className="text-pink-600 hover:text-pink-800 font-medium flex items-center">
+                      Upload Expense <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-purple-100 mr-4">
+                      <ClipboardList className="h-5 w-5 text-purple-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Create Survey</h2>
+                  </div>
+                  <div className="rounded-2xl bg-purple-50 p-5 mb-4">
+                    <p className="text-gray-700">Design and launch new surveys.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/create_survey" className="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                      Create Survey <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-blue-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-blue-100 mr-4">
+                      <CheckSquare className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Student Feedback</h2>
+                  </div>
+                  <div className="rounded-2xl bg-blue-50 p-5 mb-4">
+                    <p className="text-gray-700">Review and analyze student feedback.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/student_feedback" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                      View Feedback <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-indigo-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-indigo-100 mr-4">
+                      <BookOpen className="h-5 w-5 text-indigo-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Refund Management</h2>
+                  </div>
+                  <div className="rounded-2xl bg-indigo-50 p-5 mb-4">
+                    <p className="text-gray-700">Manage student refund requests.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/view_refund_list" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                      Refund List <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -241,20 +400,28 @@ export default function Home() {
           {/* Admin Specific Functionality */}
           {currentUser.usertype === 'admin' && (
             <>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <FaUserFriends className="text-blue-600 text-3xl mb-4" />
-                <h3 className="font-bold text-xl mb-2">Manager Management</h3>
-                <p className="text-gray-600 mb-4">Add and manage hostel managers.</p>
-                <Link to="/add_manager" className="text-blue-600 hover:underline">
-                  Add Manager
-                </Link>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
+                      <Users className="h-5 w-5 text-cyan-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Manager Management</h2>
+                  </div>
+                  <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
+                    <p className="text-gray-700">Add and manage hostel managers.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/add_manager" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
+                      Add Manager <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </>
           )}
         </div>
-      </main>
-
-  
+      </div>
     </div>
   );
 }

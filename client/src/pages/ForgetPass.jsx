@@ -1,40 +1,425 @@
-import React, { useState } from 'react';
-import VerifyOtp from '../components/VerifyOtp';
-import ResetPassword from '../components/ResetPassword';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { User, Mail, Lock, Key, CheckCircle, ArrowRight, Clock, AlertCircle } from 'lucide-react';
 
-export default function ForgetPass() {
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [passwordReset, setPasswordReset] = useState(false);
-  const [regNo, setRegNo] = useState('');
+export default function ForgetPassword() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get userType from location state or fall back to 'student'
+  const [userType, setUserType] = useState(() => {
+    return location.state?.userType || 'student';
+  });
+  
+  const [step, setStep] = useState(1); // 1: Initial form, 2: OTP input, 3: Reset password
+  const [formData, setFormData] = useState({
+    identifier: '', // reg_no for students, username for admin/manager
+    otp: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [message, setMessage] = useState({ text: '', isError: false });
+  const [otpSent, setOtpSent] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+  
+  // Timer state for OTP resend
+  const [resendTimer, setResendTimer] = useState(0); // Time in seconds
+  const [canResend, setCanResend] = useState(true);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
+  // Format time for display (MM:SS)
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Timer effect for OTP resend
+  useEffect(() => {
+    let interval;
+    
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (otpSent && resendTimer === 0) {
+      setCanResend(true);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [resendTimer, otpSent]);
+
+  // Request OTP
+  const handleRequestOTP = async (e) => {
+    if (e) e.preventDefault();
+    setMessage({ text: '', isError: false });
+    
+    try {
+      const res = await fetch('/api/student/request_password_reset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: formData.identifier,
+          userType: userType
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success === false) {
+        setMessage({ text: data.message, isError: true });
+        return;
+      }
+      
+      setOtpSent(true);
+      setMessage({ text: data.message || 'OTP sent to your registered email', isError: false });
+      setStep(2);
+      
+      // Set resend timer to 5 minutes (300 seconds)
+      setResendTimer(300);
+      setCanResend(false);
+    } catch (error) {
+      setMessage({ text: 'Failed to send OTP. Please try again.', isError: true });
+    }
+  };
+
+  // Verify OTP
+  const handleVerifyOTP = async (e) => {
+    e.preventDefault();
+    setMessage({ text: '', isError: false });
+    
+    try {
+      const res = await fetch('/api/student/verify_otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: formData.identifier,
+          userType: userType,
+          otp: formData.otp
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success === false) {
+        setMessage({ text: data.message || 'Invalid OTP', isError: true });
+        return;
+      }
+      
+      setMessage({ text: 'OTP verified successfully', isError: false });
+      setStep(3);
+    } catch (error) {
+      setMessage({ text: 'Failed to verify OTP. Please try again.', isError: true });
+    }
+  };
+
+  // Reset Password
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setMessage({ text: '', isError: false });
+    
+    if (formData.newPassword !== formData.confirmPassword) {
+      setMessage({ text: 'Passwords do not match', isError: true });
+      return;
+    }
+    
+    try {
+      const res = await fetch('/api/auth/reset_password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: formData.identifier,
+          userType: userType,
+          otp: formData.otp,
+          newPassword: formData.newPassword
+        }),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success === false) {
+        setMessage({ text: data.message, isError: true });
+        return;
+      }
+      
+      setResetSuccess(true);
+      setMessage({ text: 'Password reset successful', isError: false });
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
+    } catch (error) {
+      setMessage({ text: 'Failed to reset password. Please try again.', isError: true });
+    }
+  };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="w-full max-w-md p-6 rounded-lg">
-        {!otpVerified && !passwordReset && (
-          <VerifyOtp setOtpVerified={setOtpVerified} setRegNo={setRegNo} />
-        )}
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+      <div className="max-w-xl mx-auto">
+        {/* Header Section */}
+        <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
+          <h1 className="text-4xl font-bold mb-3">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+              Reset Password
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Reset your password for SHMMS
+            <span className="ml-1 font-medium">
+              ({userType === 'student' ? 'Student' : userType === 'admin' ? 'Admin' : 'Manager'})
+            </span>
+          </p>
+        </div>
 
-        {otpVerified && !passwordReset && (
-          <ResetPassword setPasswordReset={setPasswordReset} regNo={regNo} />
-        )}
-
-        {passwordReset && (
-          <div className="w-full max-w-md p-8 space-y-6">
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-green-600">Password Reset</h2>
-                <p className="text-gray-600">Your password has been successfully reset.</p>
-                <a 
-                  href="/login" 
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition duration-200"
-                >
-                  Go to Login
-                </a>
+        {/* Main Content Card */}
+        <div className="bg-white rounded-3xl shadow-lg border border-blue-100">
+          {/* Progress Steps */}
+          <div className="px-6 pt-6">
+            <div className="flex justify-between items-center mb-4">
+              <div className={`flex flex-col items-center ${step >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                  <User className="h-5 w-5" />
+                </div>
+                <span className="text-xs mt-1">Identify</span>
+              </div>
+              
+              <div className={`flex-1 h-1 mx-2 ${step >= 2 ? 'bg-blue-400' : 'bg-gray-200'}`}></div>
+              
+              <div className={`flex flex-col items-center ${step >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                  <Key className="h-5 w-5" />
+                </div>
+                <span className="text-xs mt-1">Verify</span>
+              </div>
+              
+              <div className={`flex-1 h-1 mx-2 ${step >= 3 ? 'bg-blue-400' : 'bg-gray-200'}`}></div>
+              
+              <div className={`flex flex-col items-center ${step >= 3 ? 'text-blue-600' : 'text-gray-400'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                  <Lock className="h-5 w-5" />
+                </div>
+                <span className="text-xs mt-1">Reset</span>
               </div>
             </div>
           </div>
-        )}
+
+          {/* Message Display */}
+          {message.text && (
+            <div className={`mx-6 ${message.isError ? 'bg-red-100 text-red-600 border border-red-200' : 'bg-green-100 text-green-600 border border-green-200'} px-4 py-3 rounded-xl text-sm flex items-center mb-4`}>
+              {message.isError ? (
+                <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+              ) : (
+                <CheckCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+              )}
+              {message.text}
+            </div>
+          )}
+
+          <div className="p-6">
+            {/* Step 1: Initial Form */}
+            {step === 1 && (
+              <form onSubmit={handleRequestOTP} className="space-y-5">
+                {/* Identifier Input (Registration Number or Username) */}
+                <div className="relative">
+                  <label htmlFor="identifier" className="text-sm font-medium text-gray-700 block mb-2">
+                    {userType === "student" ? "Registration Number" : "Username"}
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
+                    <input
+                      type="text"
+                      id="identifier"
+                      value={formData.identifier}
+                      onChange={handleChange}
+                      required
+                      placeholder={userType === "student" ? "Enter Registration Number" : "Enter Username"}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                >
+                  <span>Send OTP</span>
+                  <Mail className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                </button>
+
+                {/* Back to Login Link */}
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login')}
+                    className="text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                  >
+                    Back to Login
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Step 2: OTP Verification */}
+            {step === 2 && (
+              <form onSubmit={handleVerifyOTP} className="space-y-5">
+                <div className="bg-blue-50 p-4 rounded-xl mb-4 border border-blue-100">
+                  <p className="text-blue-700 text-sm">
+                    An OTP has been sent to your registered email address. Please check your inbox and enter the code below.
+                  </p>
+                </div>
+                
+                <div className="relative">
+                  <label htmlFor="otp" className="text-sm font-medium text-gray-700 block mb-2">
+                    Enter OTP
+                  </label>
+                  <div className="relative">
+                    <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
+                    <input
+                      type="text"
+                      id="otp"
+                      value={formData.otp}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter the OTP sent to your email"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                >
+                  <span>Verify OTP</span>
+                  <CheckCircle className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                </button>
+
+                {/* Resend OTP Button with Timer */}
+                <div className="text-center pt-2">
+                  {canResend ? (
+                    <button
+                      type="button"
+                      onClick={handleRequestOTP}
+                      className="text-blue-600 hover:text-blue-700 font-medium transition duration-200 flex items-center justify-center mx-auto space-x-1"
+                    >
+                      <Mail className="h-4 w-4" />
+                      <span>Resend OTP</span>
+                    </button>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-2 text-gray-500">
+                      <Clock className="h-4 w-4" />
+                      <span>Resend OTP in {formatTime(resendTimer)}</span>
+                    </div>
+                  )}
+                </div>
+              </form>
+            )}
+
+            {/* Step 3: Reset Password Form */}
+            {step === 3 && (
+              <form onSubmit={handleResetPassword} className="space-y-5">
+                {/* New Password Input */}
+                <div className="relative">
+                  <label htmlFor="newPassword" className="text-sm font-medium text-gray-700 block mb-2">
+                    New Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
+                    <input
+                      type="password"
+                      id="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter new password"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                {/* Confirm Password Input */}
+                <div className="relative">
+                  <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700 block mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-5 w-5" />
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      placeholder="Confirm new password"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Requirements */}
+                {/* <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                  <p className="text-blue-700 text-sm font-medium mb-2">Password must include:</p>
+                  <ul className="text-blue-600 text-sm space-y-1">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 mr-2" />
+                      At least 8 characters
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 mr-2" />
+                      Upper and lowercase letters
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-3 w-3 mr-2" />
+                      At least one number
+                    </li>
+                  </ul>
+                </div> */}
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                >
+                  <span>Reset Password</span>
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Success Message Modal */}
+      {resetSuccess && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full space-y-6 border border-blue-100">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="h-12 w-12 text-green-500" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-800">Success!</h2>
+              <p className="text-gray-600">Your password has been reset successfully.</p>
+              <p className="text-blue-500 text-sm">Redirecting to login page...</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

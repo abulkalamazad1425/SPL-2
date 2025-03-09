@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Mail, Phone, BookOpen, Calendar, CreditCard, User, Edit2, CheckCircle, Upload, Lock,ClipboardList, CreditCard as PaymentIcon} from 'lucide-react';
-import { updateProfileSuccess } from '../redux/user/userSlice';
+import { Mail, Phone, BookOpen, Calendar, CreditCard, User, Edit2, CheckCircle, Upload, Lock, ClipboardList, LogOut, FileText, CreditCard as PaymentIcon } from 'lucide-react';
+import { updateProfileSuccess, logOutSuccess } from '../redux/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: currentUser?.name || '',
@@ -21,13 +21,16 @@ export default function Profile() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [error, setError] = useState('');
   const [isChangingPassword, setIsChangingPassword] = useState(false); // State for password change modal
-  const [changeError,setChangeError]=useState('');
-  const [changeSuccess,setChangeSuccess]=useState(false);
+  const [changeError, setChangeError] = useState('');
+  const [changeSuccess, setChangeSuccess] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   });
+  const [isApplyingLeave, setIsApplyingLeave] = useState(false);
+  const [leaveError, setLeaveError] = useState('');
+  const [leaveSuccess, setLeaveSuccess] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -64,7 +67,53 @@ export default function Profile() {
     };
     reader.readAsDataURL(file);
   };
+  const handleLeaveSubmit = async () => {
+    setLeaveError('');
+    setLeaveSuccess(false);
 
+    try {
+      const response = await fetch(`/api/student/apply_leave/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success === false) {
+        setLeaveError(data.message);
+        throw new Error(data.message || 'Failed to apply for leave');
+      }
+
+      setLeaveSuccess(true);
+      setTimeout(() => {
+        setIsApplyingLeave(false);
+        setLeaveSuccess(false);
+      }, 1500);
+    } catch (err) {
+      console.error('Error applying for leave:', err);
+      setLeaveError(err.message || 'Something went wrong. Please try again.');
+    }
+  }
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/log_out');
+
+      const data = await response.json();
+
+      if (data.success === false) {
+        throw new Error(data.message || 'Logout failed');
+      }
+
+      // Clear user state in Redux
+      dispatch(logOutSuccess());
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+      // Optionally show an error message
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -89,7 +138,7 @@ export default function Profile() {
 
       const data = await response.json();
 
-      if (data.success===false) {
+      if (data.success === false) {
         throw new Error(data.message || 'Failed to update profile');
       }
       dispatch(updateProfileSuccess(data));
@@ -163,7 +212,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -401,7 +450,7 @@ export default function Profile() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Account Balance</p>
-                    <p className="font-medium text-gray-800">${currentUser?.balance || '0.00'}</p>
+                    <p className="font-medium text-gray-800">Tk {currentUser?.balance || '0.00'}</p>
                   </div>
                 </div>
                 
@@ -426,7 +475,7 @@ export default function Profile() {
         </div>
 
         {/* Academic Information */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100">
+        <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100 mb-8">
           <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
             Academic Information
           </h2>
@@ -482,29 +531,51 @@ export default function Profile() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100 mt-8 space-y-4">
-        <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-          Additional Actions
-        </h2>
-        
-        {/* Meal History Button */}
-        <button
-          onClick={() => {navigate(`/meal_history/${currentUser._id}`)}}
-          className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
-        >
-          <ClipboardList className="h-6 w-6 mr-3" />
-          View Meal History
-        </button>
 
-        {/* Payment History Button */}
-        <button
-          onClick={() => {navigate(`/payment_history/${currentUser._id}`)}}
-          className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
-        >
-          <PaymentIcon className="h-6 w-6 mr-3" />
-          View Payment History
-        </button>
+        {/* Additional Actions Section - Fixed styling to match other sections */}
+        <div className="bg-white rounded-3xl p-8 shadow-lg border border-blue-100 mb-8">
+          <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+            Additional Actions
+          </h2>
+          
+          <div className="space-y-4">
+            {/* Meal History Button */}
+            <button
+              onClick={() => {navigate(`/meal_history/${currentUser._id}`)}}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
+            >
+              <ClipboardList className="h-6 w-6 mr-3" />
+              View Meal History
+            </button>
+
+            {/* Payment History Button */}
+            <button
+              onClick={() => {navigate(`/payment_history/${currentUser._id}`)}}
+              className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
+            >
+              <PaymentIcon className="h-6 w-6 mr-3" />
+              View Payment History
+            </button>
+
+            {/* Apply Leave Button */}
+            <button
+              onClick={() => setIsApplyingLeave(true)}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
+            >
+              <FileText className="h-6 w-6 mr-3" />
+              Apply Leave
+            </button>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white py-4 rounded-xl font-medium transition duration-200 flex items-center justify-center"
+            >
+              <LogOut className="h-6 w-6 mr-3" />
+              Log out
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Change Password Modal */}
@@ -566,12 +637,12 @@ export default function Profile() {
                 </div>
               </div>
               {changeError && (
-          <div className="bg-red-100 text-red-600 px-6 py-4 rounded-2xl text-base flex items-center mb-6 shadow-md border border-red-200">
-            <CheckCircle className="h-6 w-6 mr-3" />
-            {changeError}
-          </div>
-        )}
-        {changeSuccess && (
+                <div className="bg-red-100 text-red-600 px-6 py-4 rounded-2xl text-base flex items-center mb-6 shadow-md border border-red-200">
+                  <CheckCircle className="h-6 w-6 mr-3" />
+                  {changeError}
+                </div>
+              )}
+              {changeSuccess && (
           <div className="bg-green-100 text-green-600 px-6 py-4 rounded-2xl text-base flex items-center mb-6 shadow-md border border-green-200">
             <CheckCircle className="h-6 w-6 mr-3" />
                 password changed successfully!
@@ -605,6 +676,50 @@ export default function Profile() {
           </div>
         </div>
       )}
+      {isApplyingLeave && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-md text-center">
+            <div className="flex justify-center mb-6">
+              <FileText className="h-16 w-16 text-blue-500" />
+            </div>
+            <h2 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+              Apply for Leave
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to apply for leave?
+            </p>
+
+            {leaveError && (
+              <div className="bg-red-100 text-red-600 px-6 py-4 rounded-2xl text-base flex items-center mb-6 shadow-md border border-red-200">
+                <CheckCircle className="h-6 w-6 mr-3" />
+                {leaveError}
+              </div>
+            )}
+            {leaveSuccess && (
+              <div className="bg-green-100 text-green-600 px-6 py-4 rounded-2xl text-base flex items-center mb-6 shadow-md border border-green-200">
+                <CheckCircle className="h-6 w-6 mr-3" />
+                Leave application submitted successfully!
+              </div>
+            )}
+
+            <div className="flex space-x-4 pt-4">
+              <button
+                onClick={handleLeaveSubmit}
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex justify-center items-center"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setIsApplyingLeave(false)}
+                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-xl font-medium transition duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

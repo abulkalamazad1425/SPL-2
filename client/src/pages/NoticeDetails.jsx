@@ -12,7 +12,7 @@ export default function NoticeDetails() {
   useEffect(() => {
     async function fetchNoticeDetails() {
       try {
-        const res = await fetch(`/api/auth/get_single_notice/${noticeId}`);
+        const res = await fetch(`/api/notice/get_single_notice/${noticeId}`);
         const data = await res.json();
         if (data.success === false) {
           setError(data.message || "Notice not found");

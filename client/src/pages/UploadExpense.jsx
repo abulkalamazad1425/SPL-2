@@ -39,7 +39,7 @@ export default function UploadExpense() {
     setError("");
     
     try {
-      const res = await fetch('/api/manager/upload_expense', {
+      const res = await fetch('/api/expense/upload_expense', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default function UploadExpense() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">

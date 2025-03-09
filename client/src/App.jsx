@@ -42,6 +42,7 @@ import MealPayment from './pages/MealPayment';
 import TermsOfService from './components/TermsOfService';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import UpdataMealStatus from './pages/UpdateMealStatus';
+import PrivateRouteBoth from './components/PrivateRouteBoth'
 
 export default function App() {
   return (
@@ -74,14 +75,16 @@ export default function App() {
         <Route element={<PrivateRouteTeacher/>}>
           <Route path='/add_manager' element={<AddManager/>}/>
         </Route>
+        <Route element={<PrivateRouteBoth/>}>
+          <Route path='/create_survey' element={<SurveyTool/>}/>
+          <Route path='/view_survey_result/:surveyId' element={<SurveyResults/>}/>
+        </Route>
         <Route element={<PrivateRouteManager/>}>
           <Route path='/update_mealschedule' element={<MealSchedule/>}/>
           <Route path='/upload_notice' element={<UploadNotice/>}/>
           <Route path='/upload_expense' element={<UploadExpense/>}/>
-          <Route path='/create_survey' element={<SurveyTool/>}/>
           <Route path='/student_feedback' element={<FeedbackList/>}/>
           <Route path='/view_meal_list' element={<MealList/>}/>
-          <Route path='/view_survey_result/:surveyId' element={<SurveyResults/>}/>
           <Route path='/view_refund_list' element={<RefundList/>}/>
           <Route path='/view_refund_history' element={<RefundHistory/>}/>
           <Route path='/view_all_transaction' element={<AllTransaction/>}/>

@@ -15,7 +15,7 @@ export default function SurveyList() {
   useEffect(() => {
     async function fetchSurveys() {
       try {
-        const res = await fetch("/api/student/get_all_survey");
+        const res = await fetch(`/api/survey/get_all_survey/${currentUser.usertype}`);
         const data = await res.json();
         if (data.success === false) {
           setError(data.message || "Failed to fetch surveys");
@@ -40,7 +40,7 @@ export default function SurveyList() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">

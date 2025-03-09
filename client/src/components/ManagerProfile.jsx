@@ -253,7 +253,7 @@ export default function ManagerProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-20 sm:mt-16">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -445,8 +445,6 @@ export default function ManagerProfile() {
                         <p className="font-medium text-gray-800">Tk {currentUser?.balance || '0.00'}</p>
                       </div>
                     </div>
-                  </div>
-                  <div className="space-y-4">
                     <div className="flex items-center bg-blue-50/50 p-4 rounded-xl">
                       <div className="p-2 rounded-full bg-blue-100 mr-3">
                         <CreditCard className="h-5 w-5 text-blue-500" />
@@ -457,6 +455,7 @@ export default function ManagerProfile() {
                       </div>
                     </div>
                   </div>
+                  
                 </div>
                 
                 {/* Edit Button */}

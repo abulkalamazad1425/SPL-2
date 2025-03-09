@@ -16,7 +16,7 @@ export default function SurveyResponse() {
   useEffect(() => {
     async function fetchSurvey() {
       try {
-        const res = await fetch(`/api/student/get_single_survey/${surveyId}`);
+        const res = await fetch(`/api/survey/get_single_survey/${surveyId}`);
         const data = await res.json();
         if (data.success === false) {
           setError(data.message || "Failed to fetch survey details");
@@ -49,7 +49,7 @@ export default function SurveyResponse() {
     setError("");
     
     try {
-      const res = await fetch(`/api/student/give_survey_response/${currentUser._id}`, {
+      const res = await fetch(`/api/survey/give_survey_response/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ surveyId, responses }),
@@ -94,7 +94,7 @@ export default function SurveyResponse() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -104,7 +104,7 @@ export default function SurveyResponse() {
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Please share your feedback by {getFormattedDate(survey.expiresAt)}
+            Please share your Response {getFormattedDate(survey.expiresAt)}
           </p>
         </div>
 
@@ -222,7 +222,7 @@ export default function SurveyResponse() {
             </>
           ) : (
             <>
-              <span>Submit Feedback</span>
+              <span>Submit Response</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
             </>
           )}

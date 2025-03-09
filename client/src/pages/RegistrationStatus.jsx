@@ -36,7 +36,7 @@ export default function RegistrationStatus() {
 
   const handleConfirmUpdate = async () => {
     try {
-      const res = await fetch(`/api/student/update_payment_status/${selectedStudent}`);
+      const res = await fetch(`/api/payment/update_payment_status/${selectedStudent}`);
       const data = await res.json();
       if (data.success === false) {
         setError("Failed to update status");
@@ -52,7 +52,7 @@ export default function RegistrationStatus() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">

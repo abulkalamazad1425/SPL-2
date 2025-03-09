@@ -9,7 +9,7 @@ export default function AllTransaction() {
   useEffect(() => {
     async function fetchTransactions() {
       try {
-        const res = await fetch("/api/manager/all_transaction");
+        const res = await fetch("/api/payment/all_transaction");
         const data = await res.json();
         if (data.success === false) {
           setError("Failed to fetch transactions. Please try again.");

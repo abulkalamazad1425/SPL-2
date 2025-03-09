@@ -11,7 +11,7 @@ export default function Notice() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        const res = await fetch("/api/auth/get_all_notice");
+        const res = await fetch("/api/notice/get_all_notice");
         const data = await res.json();
         if (data.success === false) {
           setError("Failed to fetch notices. Please try again.");

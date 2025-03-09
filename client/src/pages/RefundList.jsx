@@ -17,7 +17,7 @@ export default function RefundList() {
       setError("");
       
       try {
-        const res = await fetch("/api/manager/get_refund_list");
+        const res = await fetch("/api/refund/get_refund_list");
         const data = await res.json();
         if (data.success) {
           setStudents(data.students);
@@ -39,7 +39,7 @@ export default function RefundList() {
 
   const handleRefund = async (studentId, refundBalance) => {
     try {
-      const res = await fetch(`/api/manager/update_refund/${studentId}`, {
+      const res = await fetch(`/api/refund/update_refund/${studentId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ balance: refundBalance }),
@@ -84,7 +84,7 @@ export default function RefundList() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">

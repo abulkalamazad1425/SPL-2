@@ -102,7 +102,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
           <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
             <div className="p-6">
               <div className="flex items-start mb-4">
@@ -121,7 +120,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
           <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-pink-100">
             <div className="p-6">
               <div className="flex items-start mb-4">
@@ -161,9 +159,8 @@ export default function Home() {
                     </Link>
                   </div>
                 </div>
-              </div>
-              
-              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
+              </div> 
+            <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
                 <div className="p-6">
                   <div className="flex items-start mb-4">
                     <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
@@ -250,14 +247,14 @@ export default function Home() {
                     <div className="p-3 rounded-2xl bg-cyan-100 mr-4">
                       <User className="h-5 w-5 text-cyan-500" />
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800 pt-2">Resign View</h2>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Deregester View</h2>
                   </div>
                   <div className="rounded-2xl bg-cyan-50 p-5 mb-4">
-                    <p className="text-gray-700">Manage resign applied students.</p>
+                    <p className="text-gray-700">Manage Deregester applied students.</p>
                   </div>
                   <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
                     <Link to="/resign_view" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
-                      Resign Student <span className="ml-1">→</span>
+                      Deregester Student <span className="ml-1">→</span>
                     </Link>
                   </div>
                 </div>
@@ -299,7 +296,24 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-purple-100 mr-4">
+                      <ClipboardList className="h-5 w-5 text-purple-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Create Survey</h2>
+                  </div>
+                  <div className="rounded-2xl bg-purple-50 p-5 mb-4">
+                    <p className="text-gray-700">Design and launch new surveys.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/create_survey" className="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                      Create Survey <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
               <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-cyan-100">
                 <div className="p-6">
                   <div className="flex items-start mb-4">
@@ -337,26 +351,6 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
-                <div className="p-6">
-                  <div className="flex items-start mb-4">
-                    <div className="p-3 rounded-2xl bg-purple-100 mr-4">
-                      <ClipboardList className="h-5 w-5 text-purple-500" />
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-800 pt-2">Create Survey</h2>
-                  </div>
-                  <div className="rounded-2xl bg-purple-50 p-5 mb-4">
-                    <p className="text-gray-700">Design and launch new surveys.</p>
-                  </div>
-                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
-                    <Link to="/create_survey" className="text-purple-600 hover:text-purple-800 font-medium flex items-center">
-                      Create Survey <span className="ml-1">→</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              
               <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-blue-100">
                 <div className="p-6">
                   <div className="flex items-start mb-4">
@@ -414,6 +408,24 @@ export default function Home() {
                   <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
                     <Link to="/add_manager" className="text-cyan-600 hover:text-cyan-800 font-medium flex items-center">
                       Add Manager <span className="ml-1">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white rounded-3xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-xl border border-purple-100">
+                <div className="p-6">
+                  <div className="flex items-start mb-4">
+                    <div className="p-3 rounded-2xl bg-purple-100 mr-4">
+                      <ClipboardList className="h-5 w-5 text-purple-500" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800 pt-2">Create Survey</h2>
+                  </div>
+                  <div className="rounded-2xl bg-purple-50 p-5 mb-4">
+                    <p className="text-gray-700">Design and launch new surveys.</p>
+                  </div>
+                  <div className="flex justify-end mt-3 border-t border-gray-200 pt-3">
+                    <Link to="/create_survey" className="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                      Create Survey <span className="ml-1">→</span>
                     </Link>
                   </div>
                 </div>

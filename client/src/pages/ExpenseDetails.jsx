@@ -12,7 +12,7 @@ export default function ExpenseDetails() {
   useEffect(() => {
     async function fetchExpenseDetails() {
       try {
-        const res = await fetch(`/api/auth/get_single_expense/${expenseId}`);
+        const res = await fetch(`/api/expense/get_single_expense/${expenseId}`);
         const data = await res.json();
         
         if(data.success === false) {
@@ -48,7 +48,7 @@ export default function ExpenseDetails() {
   
   if (!expense) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-3xl p-8 text-center shadow-lg border border-blue-100">
             {error && (
@@ -78,7 +78,7 @@ export default function ExpenseDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-2xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-6 mb-6 text-center shadow-lg border border-blue-100">

@@ -54,9 +54,7 @@ export default function ResignView() {
 
   const handleConfirmRemoval = async () => {
     try {
-      const res = await fetch(`/api/manager/remove_student/${selectedStudent}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/manager/remove_student/${selectedStudent}`);
       
       const data = await res.json();
       

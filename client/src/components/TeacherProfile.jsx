@@ -246,7 +246,7 @@ export default function TeacherProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 mt-12 sm:px-6 ">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 mt-12 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -519,8 +519,6 @@ export default function TeacherProfile() {
           <h2 className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
             Additional Actions
           </h2>
-          
-          
           <button
             onClick={handleRemoveManager}
             disabled={removeManagerLoading}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User, Mail, Lock, Key, CheckCircle, ArrowRight, Clock, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, Key, CheckCircle, ArrowRight, Clock, AlertCircle, Loader } from 'lucide-react';
 
 export default function ForgetPassword() {
   const navigate = useNavigate();
@@ -25,6 +25,11 @@ export default function ForgetPassword() {
   // Timer state for OTP resend
   const [resendTimer, setResendTimer] = useState(0); // Time in seconds
   const [canResend, setCanResend] = useState(true);
+  
+  // Loading states
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -62,9 +67,10 @@ export default function ForgetPassword() {
   const handleRequestOTP = async (e) => {
     if (e) e.preventDefault();
     setMessage({ text: '', isError: false });
+    setIsLoading(true);
     
     try {
-      const res = await fetch('/api/student/request_password_reset', {
+      const res = await fetch('/api/auth/request_password_reset', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,6 +85,7 @@ export default function ForgetPassword() {
       
       if (data.success === false) {
         setMessage({ text: data.message, isError: true });
+        setIsLoading(false);
         return;
       }
       
@@ -91,6 +98,8 @@ export default function ForgetPassword() {
       setCanResend(false);
     } catch (error) {
       setMessage({ text: 'Failed to send OTP. Please try again.', isError: true });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,9 +107,10 @@ export default function ForgetPassword() {
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
     setMessage({ text: '', isError: false });
+    setIsVerifying(true);
     
     try {
-      const res = await fetch('/api/student/verify_otp', {
+      const res = await fetch('/api/auth/verify_otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,6 +126,7 @@ export default function ForgetPassword() {
       
       if (data.success === false) {
         setMessage({ text: data.message || 'Invalid OTP', isError: true });
+        setIsVerifying(false);
         return;
       }
       
@@ -123,6 +134,8 @@ export default function ForgetPassword() {
       setStep(3);
     } catch (error) {
       setMessage({ text: 'Failed to verify OTP. Please try again.', isError: true });
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -130,9 +143,11 @@ export default function ForgetPassword() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setMessage({ text: '', isError: false });
+    setIsResetting(true);
     
     if (formData.newPassword !== formData.confirmPassword) {
       setMessage({ text: 'Passwords do not match', isError: true });
+      setIsResetting(false);
       return;
     }
     
@@ -154,6 +169,7 @@ export default function ForgetPassword() {
       
       if (data.success === false) {
         setMessage({ text: data.message, isError: true });
+        setIsResetting(false);
         return;
       }
       
@@ -164,11 +180,13 @@ export default function ForgetPassword() {
       }, 3000);
     } catch (error) {
       setMessage({ text: 'Failed to reset password. Please try again.', isError: true });
+    } finally {
+      setIsResetting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">
@@ -248,6 +266,7 @@ export default function ForgetPassword() {
                       required
                       placeholder={userType === "student" ? "Enter Registration Number" : "Enter Username"}
                       className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -255,10 +274,20 @@ export default function ForgetPassword() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <span>Send OTP</span>
-                  <Mail className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                  {isLoading ? (
+                    <>
+                      <Loader className="h-5 w-5 animate-spin" />
+                      <span>Sending OTP...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send OTP</span>
+                      <Mail className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                    </>
+                  )}
                 </button>
 
                 {/* Back to Login Link */}
@@ -267,6 +296,7 @@ export default function ForgetPassword() {
                     type="button"
                     onClick={() => navigate('/login')}
                     className="text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    disabled={isLoading}
                   >
                     Back to Login
                   </button>
@@ -297,6 +327,7 @@ export default function ForgetPassword() {
                       required
                       placeholder="Enter the OTP sent to your email"
                       className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      disabled={isVerifying}
                     />
                   </div>
                 </div>
@@ -304,10 +335,20 @@ export default function ForgetPassword() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                  disabled={isVerifying}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <span>Verify OTP</span>
-                  <CheckCircle className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                  {isVerifying ? (
+                    <>
+                      <Loader className="h-5 w-5 animate-spin" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Verify OTP</span>
+                      <CheckCircle className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                    </>
+                  )}
                 </button>
 
                 {/* Resend OTP Button with Timer */}
@@ -316,10 +357,20 @@ export default function ForgetPassword() {
                     <button
                       type="button"
                       onClick={handleRequestOTP}
-                      className="text-blue-600 hover:text-blue-700 font-medium transition duration-200 flex items-center justify-center mx-auto space-x-1"
+                      disabled={isLoading}
+                      className="text-blue-600 hover:text-blue-700 font-medium transition duration-200 flex items-center justify-center mx-auto space-x-1 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
-                      <Mail className="h-4 w-4" />
-                      <span>Resend OTP</span>
+                      {isLoading ? (
+                        <>
+                          <Loader className="h-4 w-4 animate-spin" />
+                          <span>Resending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="h-4 w-4" />
+                          <span>Resend OTP</span>
+                        </>
+                      )}
                     </button>
                   ) : (
                     <div className="flex items-center justify-center space-x-2 text-gray-500">
@@ -349,6 +400,7 @@ export default function ForgetPassword() {
                       required
                       placeholder="Enter new password"
                       className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      disabled={isResetting}
                     />
                   </div>
                 </div>
@@ -368,36 +420,28 @@ export default function ForgetPassword() {
                       required
                       placeholder="Confirm new password"
                       className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                      disabled={isResetting}
                     />
                   </div>
                 </div>
 
-                {/* Password Requirements */}
-                {/* <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                  <p className="text-blue-700 text-sm font-medium mb-2">Password must include:</p>
-                  <ul className="text-blue-600 text-sm space-y-1">
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 mr-2" />
-                      At least 8 characters
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 mr-2" />
-                      Upper and lowercase letters
-                    </li>
-                    <li className="flex items-center">
-                      <CheckCircle className="h-3 w-3 mr-2" />
-                      At least one number
-                    </li>
-                  </ul>
-                </div> */}
-
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group"
+                  disabled={isResetting}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-xl font-medium transition duration-200 flex items-center justify-center space-x-2 group disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <span>Reset Password</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                  {isResetting ? (
+                    <>
+                      <Loader className="h-5 w-5 animate-spin" />
+                      <span>Resetting Password...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Reset Password</span>
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+                    </>
+                  )}
                 </button>
               </form>
             )}

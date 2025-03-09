@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Plus, Trash, Calendar, MessageSquare, ArrowRight, CheckCircle, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 export default function SurveyTool() {
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
   const [questions, setQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState({
     type: "multiple-choice",
@@ -70,7 +72,7 @@ export default function SurveyTool() {
       questions,
     };
   
-    const res=await fetch('/api/manager/upload_survey',{
+    const res=await fetch(`/api/survey/upload_survey/${currentUser.usertype}`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'

@@ -11,7 +11,7 @@ export default function Expense() {
   useEffect(() => {
     async function fetchExpenses() {
       try {
-        const res = await fetch("/api/auth/get_all_expense");
+        const res = await fetch("/api/expense/get_all_expense");
         const data = await res.json();
         if(data.success === false) {
           setError('Expense list not found');

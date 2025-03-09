@@ -9,15 +9,25 @@ export default function MealList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Function to format today's date in YYYY-MM-DD format
+  // Function to format today's date in YYYY-MM-DD format for input element
   const getTodayDate = () => {
     const today = new Date();
-    return today.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  // Function to format date in local format for display
+  const getLocalDateString = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
   };
 
   // Fetch meals when component mounts (default to today's date)
   useEffect(() => {
     const today = getTodayDate();
+    console.log(today);
     setSelectedDate(today);
     fetchMeals(today);
   }, []);
@@ -32,7 +42,7 @@ export default function MealList() {
     setError("");
 
     try {
-      const res = await fetch(`/api/manager/get_meal_list?date=${date}`);
+      const res = await fetch(`/api/meal/get_daily_meal_list?date=${date}`);
 
       const data = await res.json();
 
@@ -55,7 +65,7 @@ export default function MealList() {
 
   const handleServeMeal = async (mealId) => {
     try {
-      const res = await fetch(`/api/manager/update_served_status/${mealId}`, {
+      const res = await fetch(`/api/meal/update_served_status/${mealId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,6 +115,19 @@ export default function MealList() {
   const getFormattedDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Check if a date is today
+  const isToday = (dateString) => {
+    const today = getTodayDate();
+    // Convert dateString to YYYY-MM-DD format for comparison
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    
+    return formattedDate === today;
   };
 
   return (
@@ -220,8 +243,7 @@ export default function MealList() {
                     </thead>
                     <tbody>
                       {filteredMeals.map((meal, index) => {
-                        const mealDate = new Date(meal.mealRef.date).toISOString().split("T")[0];
-                        const isToday = mealDate === getTodayDate();
+                        const mealIsToday = isToday(meal.mealRef.date);
                         const isUnserved = meal.servedStatus === "Unserved";
                         
                         return (
@@ -267,9 +289,9 @@ export default function MealList() {
                             <td className="py-3 px-4 text-right">
                               <button
                                 onClick={() => handleServeMeal(meal._id)}
-                                disabled={!isToday || !isUnserved}
+                                disabled={!mealIsToday || !isUnserved}
                                 className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                  isUnserved && isToday
+                                  isUnserved && mealIsToday
                                     ? "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
                                     : "bg-gray-200 text-gray-500 cursor-not-allowed"
                                 }`}

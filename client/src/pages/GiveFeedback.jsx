@@ -34,7 +34,7 @@ export default function GiveFeedback() {
       // Simulating API call with a timeout
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      const res=await fetch(`/api/student/submit_feedback/${currentUser._id}`,{
+      const res=await fetch(`/api/feedback/submit_feedback/${currentUser._id}`,{
         method:'POST',
         headers:{
           'Content-Type':'application/json'
@@ -65,7 +65,7 @@ export default function GiveFeedback() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 mt-12">
       <div className="w-full max-w-2xl p-8 space-y-6">
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           {/* Header Section */}

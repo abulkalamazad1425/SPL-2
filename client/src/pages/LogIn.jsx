@@ -63,7 +63,7 @@ export default function Login() {
     setErrorMessage('');
     
     try {
-      const res = await fetch('/api/student/login', {
+      const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

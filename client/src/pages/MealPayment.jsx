@@ -39,7 +39,7 @@ export default function MealPayment() {
       return;
     }
     try {
-      const res = await fetch(`/api/manager/update_meal_payment/${selectedPayment}`, {
+      const res = await fetch(`/api/payment/update_meal_payment/${selectedPayment}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reg_no: regNo }),

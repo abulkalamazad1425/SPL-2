@@ -8,8 +8,14 @@ const userSlice=createSlice({
     reducers:{
         logInSuccess:(state,action)=>{
             state.currentUser=action.payload;
+        },
+        updateProfileSuccess:(state,action)=>{
+            state.currentUser=action.payload;
+        },
+        logOutSuccess:(state)=>{
+            state.currentUser=null;
         }
     }
 });
-export const {logInSuccess}=userSlice.actions;
+export const {logInSuccess,updateProfileSuccess,logOutSuccess}=userSlice.actions;
 export default userSlice.reducer;

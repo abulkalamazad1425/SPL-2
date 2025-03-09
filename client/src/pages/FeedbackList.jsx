@@ -11,7 +11,7 @@ export default function FeedbackList() {
   useEffect(() => {
     async function fetchFeedback() {
       try {
-        const res = await fetch("/api/manager/get_feedback_list");
+        const res = await fetch("/api/feedback/get_feedback_list");
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);

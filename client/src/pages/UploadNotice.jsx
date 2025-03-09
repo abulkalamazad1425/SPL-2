@@ -61,7 +61,7 @@ export default function UploadNotice() {
         uploadData.append('pdf', formData.pdf);
       }
       
-      const res = await fetch('/api/manager/upload_notice', {
+      const res = await fetch('/api/notice/upload_notice', {
         method: 'POST',
         body: uploadData,
       });

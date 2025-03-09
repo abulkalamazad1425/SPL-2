@@ -14,7 +14,7 @@ export default function SurveyResults() {
   useEffect(() => {
     async function fetchResults() {
       try {
-        const res = await fetch(`/api/manager/get_survey_result/${surveyId}`);
+        const res = await fetch(`/api/survey/get_survey_result/${surveyId}`);
         const data = await res.json();
         if (data.success===false) {
           setError(data.message || "Failed to fetch survey results");
@@ -62,7 +62,7 @@ export default function SurveyResults() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 mt-12">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-3xl p-8 mb-8 text-center shadow-lg border border-blue-100">

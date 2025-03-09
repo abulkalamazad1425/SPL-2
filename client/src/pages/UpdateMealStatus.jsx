@@ -15,7 +15,7 @@ export default function UpdateMealStatus() {
 
   const fetchMealList = async () => {
     try {
-      const res = await fetch(`/api/student/get_meallist/${currentUser._id}`);
+      const res = await fetch(`/api/meal/get_meallist/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
         console.log(data.message);
@@ -39,7 +39,7 @@ export default function UpdateMealStatus() {
   const updateMealStatus = async (mealId) => {
     try {
       const res = await fetch(
-        `/api/student/update_mealstatus?student_id=${currentUser._id}&meal_id=${mealId}`,
+        `/api/meal/update_mealstatus?student_id=${currentUser._id}&meal_id=${mealId}`,
         { method: "PUT" }
       );
       const data = await res.json();
@@ -58,7 +58,7 @@ export default function UpdateMealStatus() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 mt-20">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 mt-12">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">

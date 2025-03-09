@@ -24,7 +24,7 @@ export default function MealSchedule() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('/api/manager/update_mealschedule', {
+    const res = await fetch('/api/meal/update_mealschedule', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

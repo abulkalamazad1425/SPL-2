@@ -9,7 +9,7 @@ export default function RefundHistory() {
   useEffect(() => {
     async function fetchRefundHistory() {
       try {
-        const res = await fetch("/api/manager/refund_history");
+        const res = await fetch("/api/refund/refund_history");
         const data = await res.json();
         if (data.success === false) {
           setError("Failed to fetch refund history. Please try again.");

@@ -135,24 +135,6 @@ export default function Header() {
               </li>
               <li>
                 <Link 
-                  to="/meals" 
-                  className="flex items-center p-3 rounded-xl hover:bg-white/10 transition-all" 
-                  onClick={closeMenu}
-                >
-                  <Coffee className="h-5 w-5 mr-3" /> Meals
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/calendar" 
-                  className="flex items-center p-3 rounded-xl hover:bg-white/10 transition-all" 
-                  onClick={closeMenu}
-                >
-                  <Calendar className="h-5 w-5 mr-3" /> Calendar
-                </Link>
-              </li>
-              <li>
-                <Link 
                   to="/profile" 
                   className="flex items-center p-3 rounded-xl bg-white/15 hover:bg-white/25 transition-all" 
                   onClick={closeMenu}

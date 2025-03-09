@@ -4,22 +4,23 @@ import dotenv from 'dotenv';
 import studentRouter from './routes/student.route.js';
 import authRouter from './routes/auth.route.js';
 import managaerRouter from './routes/manager.route.js';
-import teacherRouter from './routes/teacher.route.js'
+import teacherRouter from './routes/teacher.route.js';
+import surveyRouter from './routes/survey.route.js';
+import noticeRouter from './routes/notice.route.js';
+import expenseRouter from './routes/expense.route.js';
+import feedbackRouter from './routes/feedback.route.js';
+import mealRouter from './routes/meal.route.js';
+import refundRouter from './routes/refund.route.js';
+import paymentRouter from './routes/payment.route.js';
 import Payment from './models/payment.model.js';
 import {v4 as uuidv4} from 'uuid';
-import SSLCommerzPayment from 'sslcommerz-lts';
-import Student from './models/student.model.js';
-import { errorHandler } from './utils/error.js';
-import StudentPayment from './models/studentPayment.model.js';
 import Hall from './models/hall.model.js';
+import path from 'path';
+import { fileURLToPath } from "url";
 dotenv.config();
-const store_id = process.env.STORE_ID;
-const store_passwd = process.env.STORE_PASS;
-const is_live = false 
-function generateTransactionId() {
+export default function generateTransactionId() {
   return `TXN-${uuidv4()}`;
 }
-//database e transaction id ta rekhe tarpor failed hole delete diye dibo
 mongoose.connect(process.env.Mongo_url).then(()=>{
     console.log("connected to mongodb");
 }).catch((err)=>{
@@ -27,10 +28,13 @@ mongoose.connect(process.env.Mongo_url).then(()=>{
 });
 
 const app=express();
+ const __filename = fileURLToPath(import.meta.url);
+ const __dirname = path.dirname(__filename);
 app.use(express.json());
+app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 const port=3000;
 app.listen(port,()=>{
-    console.log(`server in running on port ${port}`)
+    console.log(`server is running on port ${port}`)
 });
 app.post('/api/updateregfee',(req,res)=>{
   const{ref,amount,paymentType}=req.body;
@@ -48,81 +52,13 @@ app.use('/api/student',studentRouter);
 app.use('/api/auth',authRouter);
 app.use('/api/manager',managaerRouter);
 app.use('/api/teacher',teacherRouter);
-app.post('/api/reg_payment',async (req,res,next)=>{
-    const{reg_no,name,phone,email}=req.body;
-    const user=await Hall.findOne({reg_no});
-    if(!user){
-        return next(errorHandler(404,'user not found'));
-    }
-  try{
-    const registrationId=await Payment.findOne({paymentType:'registration'});
-    if(!registrationId){
-      return next(errorHandler(404,'registration fee is not updated by manager'));
-    }
-    const amount=registrationId.amount;
-    const transactionId=generateTransactionId();
-    const data = {
-      total_amount: amount,
-      currency: 'BDT',
-      tran_id: transactionId, // use unique tran_id for each api call
-      success_url: `http://localhost:3000/api/payment/success/${transactionId}`,
-      fail_url: 'http://localhost:3000/api/payment/fail',
-      cancel_url: 'http://localhost:3000/api/payment/cancel',
-      ipn_url: 'http://localhost:3000/api/payment/ipn',
-      shipping_method: 'Courier',
-      product_name: 'Computer.',
-      product_category: 'Electronic',
-      product_profile: 'general',
-      cus_name: name,
-      cus_email: email,
-      cus_add1: 'Dhaka',
-      cus_add2: 'Dhaka',
-      cus_city: 'Dhaka',
-      cus_state: 'Dhaka',
-      cus_postcode: '1000',
-      cus_country: 'Bangladesh',
-      cus_phone: phone,
-      cus_fax: '01711111111',
-      ship_name: name,
-      ship_add1: 'Dhaka',
-      ship_add2: 'Dhaka',
-      ship_city: 'Dhaka',
-      ship_state: 'Dhaka',
-      ship_postcode: 1000,
-      ship_country: 'Bangladesh',
-  };
-  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
-  sslcz.init(data).then(apiResponse => {
-      // Redirect the user to payment gateway
-      let GatewayPageURL = apiResponse.GatewayPageURL
-      //res.redirect(GatewayPageURL)
-      res.json({'url':GatewayPageURL});
-  });
-  app.post('/api/payment/success/:tranId',async(req,res)=>{
-    const transactionId=req.params.tranId;
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getDate()}/${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`;
-    const newPayment=new StudentPayment({
-        paymentRef:registrationId._id,
-        studentRef:user._id,
-        transactionId:transactionId,
-        date:formattedDate,
-    });
-    await newPayment.save();
-   res.redirect(`http://localhost:5173/payment_success/${req.params.tranId}`);
-  });
-  app.post('/api/payment/fail', (req, res) => {
-    res.redirect(`http://localhost:5173/payment_failed`);
-});
-
-// Example Cancel Endpoint
-app.post('/api/payment/cancel', (req, res) => {
-    res.redirect(`http://localhost:5173/payment_cancelled`);
-});
-  }catch(error){
-    return next(error);
-  }
-})
+app.use('/api/survey',surveyRouter);
+app.use('/api/notice',noticeRouter);
+app.use('/api/expense',expenseRouter);
+app.use('/api/feedback',feedbackRouter);
+app.use('/api/meal',mealRouter);
+app.use('/api/refund',refundRouter);
+app.use('/api/payment',paymentRouter);
 //middleware for error
 app.use((err,req,res,next)=>{
     const statusCode=err.statusCode||500;

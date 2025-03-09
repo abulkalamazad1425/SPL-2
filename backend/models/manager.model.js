@@ -23,6 +23,20 @@ const managerSchema=mongoose.Schema({
         unique:true,
         required:true,
     },
+    photo:{
+        type:String,
+        default:'uploads\\profiles\\profile.png'
+    },
+    balance:{
+        type:Number,
+        required:true,
+        default:0,
+    },
+    jamanatBalance:{
+        type:Number,
+        required:true,
+        default:0,
+    }
 
 },{timestamps:true});
 const Manager=mongoose.model('Manager',managerSchema);

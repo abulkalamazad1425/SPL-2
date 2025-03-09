@@ -14,8 +14,14 @@ const StudentMealSchema=mongoose.Schema({
     },
     mealStatus:{
         type:String,
+        enum:['on','off'],
         required:true,
     },
+    servedStatus:{
+        type:String,
+        enum:['Served','Unserved'],
+        default:'Unserved',
+    }
 },{timestamps:true});
 const StudentMeal=mongoose.model('StudentMeal',StudentMealSchema);
 export default StudentMeal;

@@ -31,7 +31,8 @@ const studentSchema = new mongoose.Schema({
   },
   reg_payment: {
     type: String,
-    required:true,
+    enum:['paid','unpaid'],
+    default:'unpaid',
   },
   name: {
     type: String,
@@ -44,6 +45,19 @@ const studentSchema = new mongoose.Schema({
   balance: {
     type: Number,
     default: 0, // Set default balance value to 0
+  },
+  photo:{
+    type:String,
+    default:'uploads\\profiles\\profile.png'
+  },
+  leaveStatus:{
+    type:String,
+    enum:['applied','running'],
+    default:'running',
+  },
+  registrationAmount:{
+    type:Number,
+    default:0,
   }
 }, { timestamps: true });
 

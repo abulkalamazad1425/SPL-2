@@ -29,7 +29,16 @@ const teacherSchema=mongoose.Schema({
         type:String,
         required:true,
         unique:true,
-    }
+    },
+    photo:{
+        type:String,
+        default:'uploads\\profiles\\profile.png'
+    },
+    balance:{
+        type:Number,
+        required:true,
+        default:0,
+    },
 },{timestamps:true});
 const Teacher=mongoose.model('Teacher',teacherSchema);
 export default Teacher;

@@ -16,3 +16,27 @@ export const addManager=async(req,res,next)=>{
         return next(error);
     }
 }
+export const getManagerDetails=async(req,res,next)=>{
+    try{
+        const manager=await Manager.findOne();
+        if(!manager){
+            return next(errorHandler(404,'no manager found'));
+        }
+        const {password:pass,...rest}=manager._doc;
+        res.status(200).json(rest);
+    }catch(error){
+        return next(error);
+    }
+}
+export const removeManager=async(req,res,next)=>{
+    try{
+        const{managerId}=req.params;
+        const count=await Manager.deleteOne({_id:managerId});
+        if(count===0){
+            return next(errorHandler(401,'failed to delete'));
+        }
+        res.status(200).json('manager profile deleted successfully');
+    }catch(error){
+        return next(error);
+    }
+}

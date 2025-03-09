@@ -1,6 +1,14 @@
 import express from 'express';
-import { addTeacher, reset_password } from '../controllers/auth.controller.js';
+import { addTeacher, changePassword,forgetPassGenerateOtp,forgetPassVerifyOtp,getProfile,log_in,logOut, reset_password, updateProfile } from '../controllers/auth.controller.js';
+import { upload } from '../utils/multer.js';
 const router=express.Router();
+router.post('/login',log_in);
 router.post('/reset_password',reset_password);
 router.post('/add_teacher',addTeacher);
+router.post('/update_profile/:id',upload.single('photo'),updateProfile);
+router.post('/change_password/:id',changePassword);
+router.get('/log_out',logOut);
+router.get('/current_profile/:userId',getProfile);
+router.post('/request_password_reset',forgetPassGenerateOtp);
+router.post('/verify_otp',forgetPassVerifyOtp);
 export default router;

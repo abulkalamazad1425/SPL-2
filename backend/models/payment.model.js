@@ -3,7 +3,6 @@ const paymentSchema=mongoose.Schema({
     ref:{
         type:String,
         required:true,
-        unique:true,
     },
     amount:{
         type:Number,
@@ -11,6 +10,7 @@ const paymentSchema=mongoose.Schema({
     },
     paymentType:{
         type:String,
+        enum:['registration','mealPayment'],
         required:true,
     }
 },{timestamps:true});

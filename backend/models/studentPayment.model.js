@@ -21,6 +21,7 @@ const StudentPaymentSchema=mongoose.Schema({
     date:{
         type:Date,
         required:true,
+        default:Date.now(),
     }
 },{timestamps:true});
 const StudentPayment=mongoose.model('StudentPayment',StudentPaymentSchema);

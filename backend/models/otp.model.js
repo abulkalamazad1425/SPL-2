@@ -9,7 +9,7 @@ const otpSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reg_no: { 
+  identifier: { 
     type: String,
     required: true,
   },
